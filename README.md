@@ -33,6 +33,17 @@ func main() {
 	//apple
 }
 ```
+## Reading 
+
+
+* https://stackoverflow.com/questions/14032903/longest-common-contiguous-subsequence-algorithm
+* https://en.wikipedia.org/wiki/Suffix_tree
+* https://en.wikipedia.org/wiki/Suffix_array
+* https://github.com/ljfuyuan/suffixtree
+* https://github.com/cweill/SuffixArray-Golang
+* https://www.sciencedirect.com/science/article/pii/S1570866709000343
+* https://en.wikipedia.org/wiki/Suffix_array
+
 
 ## License
 
