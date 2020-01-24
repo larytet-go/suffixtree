@@ -95,7 +95,7 @@ func (n *node) contains(index int) bool {
 func (n *node) addEdge(r Symbol, e *edge) {
 	if idx := n.search(r); idx == -1 {
 		n.edges = append(n.edges, e)
-		sort.Slice(n.edges, func(i, j int) bool { return n.edges[i].label[0] < n.edges[j].label[0] })
+		sort.Slice(n.edges, func(i, j int) bool { return n.edges[i].label[0].IsLess(n.edges[j].label[0]) })
 	} else {
 		n.edges[idx] = e
 	}
@@ -111,7 +111,7 @@ func (n *node) getEdge(r Symbol) *edge {
 }
 
 func (n *node) search(r Symbol) int {
-	idx := sort.Search(len(n.edges), func(i int) bool { return n.edges[i].label[0] >= r })
+	idx := sort.Search(len(n.edges), func(i int) bool { return !n.edges[i].label[0].IsLess(r) })
 	if idx < len(n.edges) && n.edges[idx].label[0] == r {
 		return idx
 	}

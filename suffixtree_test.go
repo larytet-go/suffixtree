@@ -13,6 +13,10 @@ func (r myRune) IsEqual(other Symbol) bool {
 	return r.r == other.(myRune).r
 }
 
+func (r myRune) IsLess(other Symbol) bool {
+	return r.r < other.(myRune).r
+}
+
 func newWord(s string) []Symbol {
 	symbols := []Symbol{}
 	for _, c := range s {
@@ -22,13 +26,20 @@ func newWord(s string) []Symbol {
 	return symbols
 }
 
+func toRunes(word []Symbol) []rune {
+	runes := []rune{}
+	for _, c := range word {
+		runes = append(runes, c.(myRune).r)
+	}
+	return runes
+}
+
 func TestSuffixTree(t *testing.T) {
 	words := [][]Symbol{
 		newWord("banana"),
 		newWord("apple"),
 		newWord("中文app"),
 	}
-	s := ([]Symbol)(words[0])
 	tree := NewGeneralizedSuffixTree()
 	for k, word := range words {
 		tree.Put(word, k)
@@ -54,7 +65,7 @@ func TestSuffixTree(t *testing.T) {
 
 func printnode(flag string, n *node) {
 	for _, e := range n.edges {
-		fmt.Printf("%s %v %v \n", flag, e.label, e.node.data)
+		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.label)), e.node.data)
 		printnode(flag+"\t-", e.node)
 	}
 }

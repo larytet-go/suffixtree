@@ -4,6 +4,7 @@ package suffixtree
 // is an array of symbols
 type Symbol interface {
 	IsEqual(other Symbol) bool
+	IsLess(other Symbol) bool
 }
 
 func isEqual(s1 []Symbol, s2 []Symbol) bool {
@@ -20,7 +21,7 @@ func isEqual(s1 []Symbol, s2 []Symbol) bool {
 }
 
 func indexSymbol(s []Symbol, c Symbol) int {
-	for i, _s := range s {
+	for _, _s := range s {
 		if _s.IsEqual(c) {
 			return 0
 		}
