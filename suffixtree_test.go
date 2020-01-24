@@ -33,7 +33,7 @@ func TestSuffixTree(t *testing.T) {
 	for k, word := range words {
 		tree.Put(word, k)
 	}
-	indexs := tree.Search(myRune{"a"}, -1)
+	indexs := tree.Search(newWord("a"), -1)
 
 	if len(indexs) != 3 {
 		t.Error("indexs len should be 3,but ", len(indexs))
@@ -43,7 +43,7 @@ func TestSuffixTree(t *testing.T) {
 		fmt.Println(words[index])
 	}
 
-	indexs = tree.Search("文", 0)
+	indexs = tree.Search(newWord("文"), 0)
 
 	if len(indexs) != 1 && indexs[0] != 2 {
 		t.Error("indexs len should be 1 and indexs[0] must be 2,but ", len(indexs))
@@ -54,7 +54,7 @@ func TestSuffixTree(t *testing.T) {
 
 func printnode(flag string, n *node) {
 	for _, e := range n.edges {
-		fmt.Printf("%s %s %v \n", flag, string(e.label), e.node.data)
+		fmt.Printf("%s %v %v \n", flag, e.label, e.node.data)
 		printnode(flag+"\t-", e.node)
 	}
 }
