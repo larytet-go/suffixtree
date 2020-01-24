@@ -17,7 +17,7 @@ type node struct {
 	/**
 	 * The suffix link as described in Ukkonen's paper.
 	 * if str is the string denoted by the path from the root to this, this.suffix
-	 * is the node denoted by the path that corresponds to str without the first rune.
+	 * is the node denoted by the path that corresponds to str without the first Symbol.
 	 */
 	suffix *node
 }
@@ -92,17 +92,17 @@ func (n *node) contains(index int) bool {
 	return i < len(n.data) && n.data[i] == index
 }
 
-func (n *node) addEdge(r rune, e *edge) {
+func (n *node) addEdge(r Symbol, e *edge) {
 	if idx := n.search(r); idx == -1 {
 		n.edges = append(n.edges, e)
-		sort.Slice(n.edges, func(i, j int) bool { return n.edges[i].label[0] < n.edges[j].label[0] })
+		sort.Slice(n.edges, func(i, j int) bool { return n.edges[i].label[0].IsLess(n.edges[j].label[0]) })
 	} else {
 		n.edges[idx] = e
 	}
 
 }
 
-func (n *node) getEdge(r rune) *edge {
+func (n *node) getEdge(r Symbol) *edge {
 	idx := n.search(r)
 	if idx < 0 {
 		return nil
@@ -110,8 +110,8 @@ func (n *node) getEdge(r rune) *edge {
 	return n.edges[idx]
 }
 
-func (n *node) search(r rune) int {
-	idx := sort.Search(len(n.edges), func(i int) bool { return n.edges[i].label[0] >= r })
+func (n *node) search(r Symbol) int {
+	idx := sort.Search(len(n.edges), func(i int) bool { return !n.edges[i].label[0].IsLess(r) })
 	if idx < len(n.edges) && n.edges[idx].label[0] == r {
 		return idx
 	}

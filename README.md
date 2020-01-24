@@ -1,4 +1,8 @@
 # Generalized Suffix Tree
+
+This is a fork of https://github.com/ljfuyuan/suffixtree 
+I need a suffix tree which can work with abstract objects instead of characters and strings. Similar to the https://golang.org/pkg/index/suffixarray/ I allow []byte objects or any other objects implementing Suffixtree.Symbol interface
+
 A Go implementation of a Generalized Suffix Tree using Ukkonen's algorithm
 
 The package just translate from Alessandro Bahgat Shehata's java version to golang and do some optimization  
@@ -33,6 +37,17 @@ func main() {
 	//apple
 }
 ```
+## Reading 
+
+
+* https://stackoverflow.com/questions/14032903/longest-common-contiguous-subsequence-algorithm
+* https://en.wikipedia.org/wiki/Suffix_tree
+* https://en.wikipedia.org/wiki/Suffix_array
+* https://github.com/ljfuyuan/suffixtree
+* https://github.com/cweill/SuffixArray-Golang
+* https://www.sciencedirect.com/science/article/pii/S1570866709000343
+* https://en.wikipedia.org/wiki/Suffix_array
+
 
 ## License
 
