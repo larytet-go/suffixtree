@@ -51,7 +51,7 @@ func TestSuffixTree(t *testing.T) {
 	}
 	fmt.Println(indexs)
 	for _, index := range indexs {
-		fmt.Println(words[index])
+		fmt.Println(string(toRunes(words[index])))
 	}
 
 	indexs = tree.Search(newWord("文"), 0)
