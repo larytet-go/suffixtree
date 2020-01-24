@@ -5,13 +5,35 @@ import (
 	"testing"
 )
 
+type myRune struct {
+	r rune
+}
+
+func (r myRune) IsEqual(other Symbol) bool {
+	return r.r == other.(myRune).r
+}
+
+func newWord(s string) []Symbol {
+	symbols := []Symbol{}
+	for _, c := range s {
+		r := myRune{c}
+		symbols = append(symbols, r)
+	}
+	return symbols
+}
+
 func TestSuffixTree(t *testing.T) {
-	words := []string{"banana", "apple", "中文app"}
+	words := [][]Symbol{
+		newWord("banana"),
+		newWord("apple"),
+		newWord("中文app"),
+	}
+	s := ([]Symbol)(words[0])
 	tree := NewGeneralizedSuffixTree()
 	for k, word := range words {
 		tree.Put(word, k)
 	}
-	indexs := tree.Search("a", -1)
+	indexs := tree.Search(myRune{"a"}, -1)
 
 	if len(indexs) != 3 {
 		t.Error("indexs len should be 3,but ", len(indexs))
