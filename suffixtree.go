@@ -1,11 +1,6 @@
 // Package suffixtree implements A Generalized Suffix Tree, based on the Ukkonen's paper "On-line construction of suffix trees"
 package suffixtree
 
-import (
-	"strings"
-	"unicode/utf8"
-)
-
 type generalizedSuffixTree struct {
 	root       *node //The root of the suffix tree
 	activeLeaf *node //The last leaf that was added during the update operation
@@ -13,7 +8,7 @@ type generalizedSuffixTree struct {
 
 // Search search for the given word within the GST and returns at most the given number of matches.
 // numElments <= 0 get all matches
-func (t *generalizedSuffixTree) Search(word string, numElements int) []int {
+func (t *generalizedSuffixTree) Search(word []Symbol, numElements int) []int {
 	node := t.searchNode(word)
 	if node == nil {
 		return nil
@@ -22,29 +17,27 @@ func (t *generalizedSuffixTree) Search(word string, numElements int) []int {
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
-func (t *generalizedSuffixTree) searchNode(word string) *node {
+func (t *generalizedSuffixTree) searchNode(word []Symbol) *node {
 	/*
 	 * Verifies if exists a path from the root to a node such that the concatenation
 	 * of all the labels on the path is a superstring of the given word.
 	 * If such a path is found, the last node on it is returned.
 	 */
-	var currentNode *node = t.root
+	var currentNode = t.root
 	var currentEdge *edge
-	var i int
 
-	for i < len(word) {
-		rune, _ := utf8.DecodeRuneInString(word[i:])
-		currentEdge = currentNode.getEdge(rune)
+	for i, symbol := range word {
+		currentEdge = currentNode.getEdge(symbol)
 		if currentEdge == nil {
-			// there is no edge starting with this rune
+			// there is no edge starting with this symbol
 			return nil
 		} else {
-			label := string(currentEdge.label)
+			label := currentEdge.label
 			lenToMatch := len(word) - i
 			if lenToMatch > len(label) {
 				lenToMatch = len(label)
 			}
-			if word[i:i+lenToMatch] != label[:lenToMatch] {
+			if !isEqual(word[i:i+lenToMatch], label[:lenToMatch]) {
 				// the label on the edge does not correspond to the one in the string to search
 				return nil
 			}
@@ -63,21 +56,20 @@ func (t *generalizedSuffixTree) searchNode(word string) *node {
 }
 
 // Put adds the specified index to the GST under the given key.
-func (t *generalizedSuffixTree) Put(key string, index int) {
+func (t *generalizedSuffixTree) Put(symbols []Symbol, index int) {
 	// reset activeLeaf
 	t.activeLeaf = t.root
 	s := t.root
-	runes := []rune(key)
 
 	// proceed with tree construction (closely related to procedure in
 	// Ukkonen's paper)
-	var text []rune
+	var text []Symbol
 	// iterate over the string, one rune at a time
-	for k, r := range runes {
+	for k, r := range symbols {
 		// line 6
 		text = append(text, r)
 		// line 7: update the tree with the new transitions due to this new rune
-		s, text = t.update(s, text, runes[k:], index)
+		s, text = t.update(s, text, symbols[k:], index)
 		// line 8: make sure the active pair is canonical
 		s, text = t.canonize(s, text)
 	}
@@ -104,22 +96,22 @@ func (t *generalizedSuffixTree) Put(key string, index int) {
  * @param rest the rest of the string
  * @param value the value to add to the index
  */
-func (t *generalizedSuffixTree) update(inputNode *node, stringPart []rune, rest []rune, value int) (s *node, runes []rune) {
+func (t *generalizedSuffixTree) update(inputNode *node, stringPart []Symbol, rest []Symbol, value int) (s *node, symbols []Symbol) {
 	s = inputNode
-	runes = stringPart
-	newRune := stringPart[len(stringPart)-1]
+	symbols = stringPart
+	newSymbol := stringPart[len(stringPart)-1]
 
 	// line 1
 	oldroot := t.root
 
 	// line 1b
-	endpoint, r := t.testAndSplit(s, stringPart[:len(stringPart)-1], newRune, rest, value)
+	endpoint, r := t.testAndSplit(s, stringPart[:len(stringPart)-1], newSymbol, rest, value)
 
 	var leaf *node
 	// line 2
 	for !endpoint {
 		// line 3
-		tempEdge := r.getEdge(newRune)
+		tempEdge := r.getEdge(newSymbol)
 		if tempEdge != nil {
 			// such a node is already present. This is one of the main differences from Ukkonen's case:
 			// the tree can contain deeper nodes at this stage because different strings were added by previous iterations.
@@ -129,7 +121,7 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []rune, rest 
 			leaf = newNode()
 			leaf.addRef(value)
 			newedge := newEdge(rest, leaf)
-			r.addEdge(newRune, newedge)
+			r.addEdge(newSymbol, newedge)
 		}
 
 		// update suffix link for newly created leaf
@@ -149,16 +141,16 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []rune, rest 
 		// line 6
 		if s.suffix == nil { // root node
 			// this is a special case to handle what is referred to as node _|_ on the paper
-			runes = runes[1:]
+			symbols = symbols[1:]
 		} else {
-			n, b := t.canonize(s.suffix, safeCutLastChar(runes))
+			n, b := t.canonize(s.suffix, safeCutLastChar(symbols))
 			s = n
 			// use intern to ensure that runes is a reference from the string pool
-			runes = append(b, runes[len(runes)-1])
+			symbols = append(b, symbols[len(symbols)-1])
 		}
 
 		// line 7
-		endpoint, r = t.testAndSplit(s, safeCutLastChar(runes), newRune, rest, value)
+		endpoint, r = t.testAndSplit(s, safeCutLastChar(symbols), newSymbol, rest, value)
 	}
 
 	// line 8
@@ -175,21 +167,21 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []rune, rest 
  * a prefix of inputstr and remainder will be string that must be
  * appended to the concatenation of labels from s to n to get inpustr.
  */
-func (t *generalizedSuffixTree) canonize(s *node, runes []rune) (*node, []rune) {
+func (t *generalizedSuffixTree) canonize(s *node, symbols []Symbol) (*node, []Symbol) {
 
 	currentNode := s
-	if len(runes) > 0 {
-		g := s.getEdge(runes[0])
+	if len(symbols) > 0 {
+		g := s.getEdge(symbols[0])
 		// descend the tree as long as a proper label is found
-		for g != nil && strings.Index(string(runes), string(g.label)) == 0 {
-			runes = runes[len(g.label):]
+		for g != nil && indexOf(symbols, g.label) == 0 {
+			symbols = symbols[len(g.label):]
 			currentNode = g.node
-			if len(runes) > 0 {
-				g = currentNode.getEdge(runes[0])
+			if len(symbols) > 0 {
+				g = currentNode.getEdge(symbols[0])
 			}
 		}
 	}
-	return currentNode, runes
+	return currentNode, symbols
 }
 
 /*
@@ -212,7 +204,7 @@ func (t *generalizedSuffixTree) canonize(s *node, runes []rune) (*node, []rune) 
  *                  the last node that can be reached by following the path denoted by stringPart starting from inputs
  *
  */
-func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []rune, r rune, remainder []rune, value int) (bool, *node) {
+func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, r Symbol, remainder []Symbol, value int) (bool, *node) {
 	// descend the tree as far as possible
 	s, str := t.canonize(inputs, stringPart)
 
@@ -244,13 +236,13 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []rune, r 
 			// if there is no t-transtion from s
 			return false, s
 		} else {
-			if string(remainder) == string(e.label) {
+			if isEqual(remainder, e.label) {
 				// update payload of destination node
 				e.node.addRef(value)
 				return true, s
-			} else if strings.Index(string(remainder), string(e.label)) == 0 {
+			} else if indexOf(remainder, e.label) == 0 {
 				return true, s
-			} else if strings.Index(string(e.label), string(remainder)) == 0 {
+			} else if indexOf(e.label, remainder) == 0 {
 				// need to split as above
 				newNode := newNode()
 				newNode.addRef(value)
@@ -269,11 +261,11 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []rune, r 
 
 }
 
-func safeCutLastChar(runes []rune) []rune {
-	if len(runes) == 0 {
+func safeCutLastChar(symbols []Symbol) []Symbol {
+	if len(symbols) == 0 {
 		return nil
 	}
-	return runes[:len(runes)-1]
+	return symbols[:len(symbols)-1]
 }
 
 func NewGeneralizedSuffixTree() *generalizedSuffixTree {
