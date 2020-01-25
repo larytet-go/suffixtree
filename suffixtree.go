@@ -4,6 +4,7 @@ package suffixtree
 type generalizedSuffixTree struct {
 	root       *node //The root of the suffix tree
 	activeLeaf *node //The last leaf that was added during the update operation
+	edgesCount int   //Number of edges in the tree
 }
 
 // Search search for the given word within the GST and returns at most the given number of matches.
@@ -14,6 +15,10 @@ func (t *generalizedSuffixTree) Search(word []Symbol, numElements int) []int {
 		return nil
 	}
 	return node.getData(numElements)
+}
+
+func (t *generalizedSuffixTree) GetEdgesCount() int {
+	return t.edgesCount
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
@@ -122,6 +127,7 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []Symbol, res
 			leaf.addRef(value)
 			newedge := newEdge(rest, leaf)
 			r.addEdge(newSymbol, newedge)
+			t.edgesCount++
 		}
 
 		// update suffix link for newly created leaf
@@ -228,6 +234,8 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 			g.label = newlabel
 			w.addEdge(newlabel[0], g)
 
+			t.edgesCount += 2
+
 			return false, w
 		}
 	} else {
@@ -251,6 +259,7 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 
 				e.label = e.label[len(remainder):]
 				newNode.addEdge(e.label[0], e)
+				t.edgesCount += 2
 				return false, s
 			} else {
 				// they are different words. No prefix. but they may still share some common substr
