@@ -51,9 +51,10 @@ func TestSuffixTree(t *testing.T) {
 		t.Errorf("Should be %d nodes instead of %d", expectedNodesCount, nodesCount)
 	}
 
+	edgesCount := tree.EdgesCount()
 	expectedEdgesCount := 8
-	if len(tree.root.edges) != expectedEdgesCount {
-		t.Errorf("Should be %d edges instead of %d", expectedEdgesCount, len(tree.root.edges))
+	if edgesCount != expectedEdgesCount {
+		t.Errorf("Should be %d edges instead of %d", expectedEdgesCount, edgesCount)
 	}
 
 	indexs := tree.Search(newWord("a"), -1)

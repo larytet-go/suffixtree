@@ -21,6 +21,10 @@ func (t *generalizedSuffixTree) NodesCount() int {
 	return t.nodesCount
 }
 
+func (t *generalizedSuffixTree) EdgesCount() int {
+	return len(t.root.edges)
+}
+
 // searchNode returns the tree node (if present) that corresponds to the given string.
 func (t *generalizedSuffixTree) searchNode(word []Symbol) *node {
 	/*
