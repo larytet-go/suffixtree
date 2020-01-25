@@ -4,7 +4,7 @@ package suffixtree
 type generalizedSuffixTree struct {
 	root       *node //The root of the suffix tree
 	activeLeaf *node //The last leaf that was added during the update operation
-	edgesCount int   //Number of edges in the tree
+	nodesCount int   //Number of nodes in the tree
 }
 
 // Search search for the given word within the GST and returns at most the given number of matches.
@@ -17,8 +17,8 @@ func (t *generalizedSuffixTree) Search(word []Symbol, numElements int) []int {
 	return node.getData(numElements)
 }
 
-func (t *generalizedSuffixTree) GetEdgesCount() int {
-	return t.edgesCount
+func (t *generalizedSuffixTree) NodesCount() int {
+	return t.nodesCount
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
@@ -127,7 +127,7 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []Symbol, res
 			leaf.addRef(value)
 			newedge := newEdge(rest, leaf)
 			r.addEdge(newSymbol, newedge)
-			t.edgesCount++
+			t.nodesCount++
 		}
 
 		// update suffix link for newly created leaf
@@ -226,6 +226,7 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 
 			// build a new node
 			w := newNode()
+			t.nodesCount++
 			// build a new edge
 			newedge := newEdge(str, w)
 			s.addEdge(str[0], newedge)
@@ -233,8 +234,6 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 			// link s -> r
 			g.label = newlabel
 			w.addEdge(newlabel[0], g)
-
-			t.edgesCount += 2
 
 			return false, w
 		}
@@ -253,13 +252,13 @@ func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 			} else if indexOf(e.label, remainder) == 0 {
 				// need to split as above
 				newNode := newNode()
+				t.nodesCount++
 				newNode.addRef(value)
 				newEdge := newEdge(remainder, newNode)
 				s.addEdge(r, newEdge)
 
 				e.label = e.label[len(remainder):]
 				newNode.addEdge(e.label[0], e)
-				t.edgesCount += 2
 				return false, s
 			} else {
 				// they are different words. No prefix. but they may still share some common substr

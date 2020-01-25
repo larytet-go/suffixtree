@@ -61,6 +61,11 @@ func TestSuffixTree(t *testing.T) {
 	}
 
 	printnode("\t", tree.root)
+
+	nodesCount := tree.NodesCount()
+	if nodesCount != 16 {
+		t.Errorf("Should be %d nodes instead of %d", 3, nodesCount)
+	}
 }
 
 func printnode(flag string, n *node) {
