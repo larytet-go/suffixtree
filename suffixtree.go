@@ -222,7 +222,7 @@ func (t *GeneralizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, 
 		g := s.getEdge(str[0])
 
 		// must see whether "str" is substring of the label of an edge
-		if len(g.label) > len(str) && g.label[len(str)] == r {
+		if len(g.label) > len(str) && g.label[len(str)].IsEqual(r) {
 			return true, s
 		} else {
 			// need to split the edge
