@@ -41,7 +41,7 @@ func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *Node {
 			// there is no edge starting with this symbol
 			return nil
 		} else {
-			label := currentEdge.label
+			label := currentEdge.Label
 			lenToMatch := len(word) - i
 			if lenToMatch > len(label) {
 				lenToMatch = len(label)
@@ -183,8 +183,8 @@ func (t *GeneralizedSuffixTree) canonize(s *Node, symbols []Symbol) (*Node, []Sy
 	if len(symbols) > 0 {
 		g := s.getEdge(symbols[0])
 		// descend the tree as long as a proper label is found
-		for g != nil && indexOf(symbols, g.label) == 0 {
-			symbols = symbols[len(g.label):]
+		for g != nil && indexOf(symbols, g.Label) == 0 {
+			symbols = symbols[len(g.Label):]
 			currentNode = g.Node
 			if len(symbols) > 0 {
 				g = currentNode.getEdge(symbols[0])
@@ -197,9 +197,9 @@ func (t *GeneralizedSuffixTree) canonize(s *Node, symbols []Symbol) (*Node, []Sy
 /*
  * testAndSplit tests whether the string stringPart + r is contained in the subtree that has inputs as root.
  * If that's not the case, and there exists a path of edges e1, e2, ... such that
- *     e1.label + e2.label + ... + $end = stringPart
+ *     e1.Label + e2.Label + ... + $end = stringPart
  * and there is an edge g such that
- *     g.label = stringPart + rest
+ *     g.Label = stringPart + rest
  *
  * Then g will be split in two different edges, one having $end as label, and the other one
  * having rest as label.
@@ -222,11 +222,11 @@ func (t *GeneralizedSuffixTree) testAndSplit(inputs *Node, stringPart []Symbol, 
 		g := s.getEdge(str[0])
 
 		// must see whether "str" is substring of the label of an edge
-		if len(g.label) > len(str) && g.label[len(str)].IsEqual(r) {
+		if len(g.Label) > len(str) && g.Label[len(str)].IsEqual(r) {
 			return true, s
 		} else {
 			// need to split the edge
-			newlabel := g.label[len(str):]
+			newlabel := g.Label[len(str):]
 
 			// build a new node
 			w := newNode()
@@ -236,7 +236,7 @@ func (t *GeneralizedSuffixTree) testAndSplit(inputs *Node, stringPart []Symbol, 
 			s.addEdge(str[0], newedge)
 
 			// link s -> r
-			g.label = newlabel
+			g.Label = newlabel
 			w.addEdge(newlabel[0], g)
 
 			return false, w
@@ -247,13 +247,13 @@ func (t *GeneralizedSuffixTree) testAndSplit(inputs *Node, stringPart []Symbol, 
 			// if there is no t-transtion from s
 			return false, s
 		} else {
-			if isEqual(remainder, e.label) {
+			if isEqual(remainder, e.Label) {
 				// update payload of destination node
 				e.Node.addRef(value)
 				return true, s
-			} else if indexOf(remainder, e.label) == 0 {
+			} else if indexOf(remainder, e.Label) == 0 {
 				return true, s
-			} else if indexOf(e.label, remainder) == 0 {
+			} else if indexOf(e.Label, remainder) == 0 {
 				// need to split as above
 				newNode := newNode()
 				t.nodesCount++
@@ -261,8 +261,8 @@ func (t *GeneralizedSuffixTree) testAndSplit(inputs *Node, stringPart []Symbol, 
 				newEdge := newEdge(remainder, newNode)
 				s.addEdge(r, newEdge)
 
-				e.label = e.label[len(remainder):]
-				newNode.addEdge(e.label[0], e)
+				e.Label = e.Label[len(remainder):]
+				newNode.addEdge(e.Label[0], e)
 				return false, s
 			} else {
 				// they are different words. No prefix. but they may still share some common substr

@@ -63,10 +63,10 @@ func indexOf(s, substr []Symbol) int {
 }
 
 type edge struct {
-	label []Symbol
+	Label []Symbol
 	*Node
 }
 
 func newEdge(label []Symbol, node *Node) *edge {
-	return &edge{label: label, Node: node}
+	return &edge{Label: label, Node: node}
 }
