@@ -44,7 +44,6 @@ func TestSuffixTree(t *testing.T) {
 	for k, word := range words {
 		tree.Put(word, k)
 	}
-	printnode("\t", tree.root)
 
 	nodesCount := tree.NodesCount()
 	expectedNodesCount := 16
@@ -73,6 +72,14 @@ func TestSuffixTree(t *testing.T) {
 	if len(indexs) != 1 && indexs[0] != 2 {
 		t.Error("indexs len should be 1 and indexs[0] must be 2,but ", len(indexs))
 	}
+
+	tree.Put(words[0], 3)
+	nodesCount = tree.NodesCount()
+	if nodesCount != expectedNodesCount {
+		t.Errorf("Should be %d nodes instead of %d", expectedNodesCount, nodesCount)
+	}
+
+	printnode("\t", tree.root)
 }
 
 func printnode(flag string, n *node) {
