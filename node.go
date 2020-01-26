@@ -112,7 +112,7 @@ func (n *node) getEdge(r Symbol) *edge {
 
 func (n *node) search(r Symbol) int {
 	idx := sort.Search(len(n.edges), func(i int) bool { return !n.edges[i].label[0].IsLess(r) })
-	if idx < len(n.edges) && n.edges[idx].label[0] == r {
+	if idx < len(n.edges) && n.edges[idx].label[0].IsEqual(r) {
 		return idx
 	}
 
