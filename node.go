@@ -9,7 +9,7 @@ type Node struct {
 	 * The payload array used to store the data (indexes) associated with this node.
 	 * In this case, it is used to store all property indexes.
 	 */
-	data []int
+	Data []int
 	/**
 	 * The set of edges starting from this Node
 	 */
@@ -34,15 +34,15 @@ type Node struct {
 func (n *Node) getData(numElements int) (ret []int) {
 
 	if numElements > 0 {
-		if numElements > len(n.data) {
-			numElements -= len(n.data)
-			ret = n.data
+		if numElements > len(n.Data) {
+			numElements -= len(n.Data)
+			ret = n.Data
 		} else {
-			ret = n.data[:numElements]
+			ret = n.Data[:numElements]
 			return
 		}
 	} else {
-		ret = n.data
+		ret = n.Data
 	}
 
 	// need to get more matches from child nodes. This is what may waste time
@@ -88,8 +88,8 @@ func (n *Node) addRef(index int) {
 }
 
 func (n *Node) contains(index int) bool {
-	i := sort.SearchInts(n.data, index)
-	return i < len(n.data) && n.data[i] == index
+	i := sort.SearchInts(n.Data, index)
+	return i < len(n.Data) && n.Data[i] == index
 }
 
 func (n *Node) addEdge(r Symbol, e *edge) {
@@ -120,7 +120,7 @@ func (n *Node) search(r Symbol) int {
 }
 
 func (n *Node) addIndex(idx int) {
-	n.data = append(n.data, idx)
+	n.Data = append(n.Data, idx)
 }
 
 func newNode() *Node {

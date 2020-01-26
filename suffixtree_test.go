@@ -103,7 +103,7 @@ func TestSuffixTree1(t *testing.T) {
 
 func printnode(flag string, n *Node) {
 	for _, e := range n.Edges {
-		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.Label)), e.Node.data)
+		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.Label)), e.Node.Data)
 		printnode(flag+"\t-", e.Node)
 	}
 }
