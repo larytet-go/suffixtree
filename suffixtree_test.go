@@ -101,9 +101,9 @@ func TestSuffixTree1(t *testing.T) {
 	printnode("\t", tree.root)
 }
 
-func printnode(flag string, n *node) {
-	for _, e := range n.edges {
-		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.label)), e.node.data)
-		printnode(flag+"\t-", e.node)
+func printnode(flag string, n *Node) {
+	for _, e := range n.Edges {
+		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.label)), e.Node.data)
+		printnode(flag+"\t-", e.Node)
 	}
 }

@@ -64,9 +64,9 @@ func indexOf(s, substr []Symbol) int {
 
 type edge struct {
 	label []Symbol
-	*node
+	*Node
 }
 
-func newEdge(label []Symbol, node *node) *edge {
-	return &edge{label: label, node: node}
+func newEdge(label []Symbol, node *Node) *edge {
+	return &edge{label: label, Node: node}
 }
