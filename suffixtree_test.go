@@ -82,6 +82,25 @@ func TestSuffixTree(t *testing.T) {
 	printnode("\t", tree.root)
 }
 
+func TestSuffixTree1(t *testing.T) {
+	words := [][]Symbol{
+		newWord("banana"),
+		newWord("apple"),
+		newWord("中文app"),
+	}
+	tree := NewGeneralizedSuffixTree()
+	k := 0
+	for _, word := range words {
+		for _, c := range word {
+			t := []Symbol{c}
+			tree.Put(t, k)
+		}
+		k++
+	}
+
+	printnode("\t", tree.root)
+}
+
 func printnode(flag string, n *node) {
 	for _, e := range n.edges {
 		fmt.Printf("%s %v %v \n", flag, string(toRunes(e.label)), e.node.data)

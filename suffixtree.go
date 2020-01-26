@@ -1,7 +1,7 @@
 // Package suffixtree implements A Generalized Suffix Tree, based on the Ukkonen's paper "On-line construction of suffix trees"
 package suffixtree
 
-type generalizedSuffixTree struct {
+type GeneralizedSuffixTree struct {
 	root       *node //The root of the suffix tree
 	activeLeaf *node //The last leaf that was added during the update operation
 	nodesCount int   //Number of nodes in the tree
@@ -9,7 +9,7 @@ type generalizedSuffixTree struct {
 
 // Search search for the given word within the GST and returns at most the given number of matches.
 // numElments <= 0 get all matches
-func (t *generalizedSuffixTree) Search(word []Symbol, numElements int) []int {
+func (t *GeneralizedSuffixTree) Search(word []Symbol, numElements int) []int {
 	node := t.searchNode(word)
 	if node == nil {
 		return nil
@@ -17,16 +17,16 @@ func (t *generalizedSuffixTree) Search(word []Symbol, numElements int) []int {
 	return node.getData(numElements)
 }
 
-func (t *generalizedSuffixTree) NodesCount() int {
+func (t *GeneralizedSuffixTree) NodesCount() int {
 	return t.nodesCount
 }
 
-func (t *generalizedSuffixTree) EdgesCount() int {
+func (t *GeneralizedSuffixTree) EdgesCount() int {
 	return len(t.root.edges)
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
-func (t *generalizedSuffixTree) searchNode(word []Symbol) *node {
+func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *node {
 	/*
 	 * Verifies if exists a path from the root to a node such that the concatenation
 	 * of all the labels on the path is a superstring of the given word.
@@ -65,7 +65,7 @@ func (t *generalizedSuffixTree) searchNode(word []Symbol) *node {
 }
 
 // Put adds the specified index to the GST under the given key.
-func (t *generalizedSuffixTree) Put(symbols []Symbol, index int) {
+func (t *GeneralizedSuffixTree) Put(symbols []Symbol, index int) {
 	// reset activeLeaf
 	t.activeLeaf = t.root
 	s := t.root
@@ -105,7 +105,7 @@ func (t *generalizedSuffixTree) Put(symbols []Symbol, index int) {
  * @param rest the rest of the string
  * @param value the value to add to the index
  */
-func (t *generalizedSuffixTree) update(inputNode *node, stringPart []Symbol, rest []Symbol, value int) (s *node, symbols []Symbol) {
+func (t *GeneralizedSuffixTree) update(inputNode *node, stringPart []Symbol, rest []Symbol, value int) (s *node, symbols []Symbol) {
 	s = inputNode
 	symbols = stringPart
 	newSymbol := stringPart[len(stringPart)-1]
@@ -177,7 +177,7 @@ func (t *generalizedSuffixTree) update(inputNode *node, stringPart []Symbol, res
  * a prefix of inputstr and remainder will be string that must be
  * appended to the concatenation of labels from s to n to get inpustr.
  */
-func (t *generalizedSuffixTree) canonize(s *node, symbols []Symbol) (*node, []Symbol) {
+func (t *GeneralizedSuffixTree) canonize(s *node, symbols []Symbol) (*node, []Symbol) {
 
 	currentNode := s
 	if len(symbols) > 0 {
@@ -214,7 +214,7 @@ func (t *generalizedSuffixTree) canonize(s *node, symbols []Symbol) (*node, []Sy
  *                  the last node that can be reached by following the path denoted by stringPart starting from inputs
  *
  */
-func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, r Symbol, remainder []Symbol, value int) (bool, *node) {
+func (t *GeneralizedSuffixTree) testAndSplit(inputs *node, stringPart []Symbol, r Symbol, remainder []Symbol, value int) (bool, *node) {
 	// descend the tree as far as possible
 	s, str := t.canonize(inputs, stringPart)
 
@@ -280,8 +280,8 @@ func safeCutLastChar(symbols []Symbol) []Symbol {
 	return symbols[:len(symbols)-1]
 }
 
-func NewGeneralizedSuffixTree() *generalizedSuffixTree {
-	t := &generalizedSuffixTree{}
+func NewGeneralizedSuffixTree() *GeneralizedSuffixTree {
+	t := &GeneralizedSuffixTree{}
 	t.root = newNode()
 	t.activeLeaf = t.root
 	return t
