@@ -79,7 +79,7 @@ func TestSuffixTree(t *testing.T) {
 		t.Errorf("Should be %d nodes instead of %d", expectedNodesCount, nodesCount)
 	}
 
-	printnode("\t", tree.root)
+	printnode("\t", tree.Root)
 }
 
 func TestSuffixTree1(t *testing.T) {
@@ -98,7 +98,7 @@ func TestSuffixTree1(t *testing.T) {
 		k++
 	}
 
-	printnode("\t", tree.root)
+	printnode("\t", tree.Root)
 }
 
 func printnode(flag string, n *Node) {

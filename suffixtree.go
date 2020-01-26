@@ -2,7 +2,7 @@
 package suffixtree
 
 type GeneralizedSuffixTree struct {
-	root       *Node //The root of the suffix tree
+	Root       *Node //The root of the suffix tree
 	activeLeaf *Node //The last leaf that was added during the update operation
 	nodesCount int   //Number of nodes in the tree
 }
@@ -22,7 +22,7 @@ func (t *GeneralizedSuffixTree) NodesCount() int {
 }
 
 func (t *GeneralizedSuffixTree) EdgesCount() int {
-	return len(t.root.Edges)
+	return len(t.Root.Edges)
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
@@ -32,7 +32,7 @@ func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *Node {
 	 * of all the labels on the path is a superstring of the given word.
 	 * If such a path is found, the last node on it is returned.
 	 */
-	var currentNode = t.root
+	var currentNode = t.Root
 	var currentEdge *edge
 
 	for i, symbol := range word {
@@ -67,8 +67,8 @@ func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *Node {
 // Put adds the specified index to the GST under the given key.
 func (t *GeneralizedSuffixTree) Put(symbols []Symbol, index int) {
 	// reset activeLeaf
-	t.activeLeaf = t.root
-	s := t.root
+	t.activeLeaf = t.Root
+	s := t.Root
 
 	// proceed with tree construction (closely related to procedure in
 	// Ukkonen's paper)
@@ -84,7 +84,7 @@ func (t *GeneralizedSuffixTree) Put(symbols []Symbol, index int) {
 	}
 
 	// add leaf suffix link, is necessary
-	if t.activeLeaf.suffix == nil && t.activeLeaf != t.root && t.activeLeaf != s {
+	if t.activeLeaf.suffix == nil && t.activeLeaf != t.Root && t.activeLeaf != s {
 		t.activeLeaf.suffix = s
 	}
 }
@@ -111,7 +111,7 @@ func (t *GeneralizedSuffixTree) update(inputNode *Node, stringPart []Symbol, res
 	newSymbol := stringPart[len(stringPart)-1]
 
 	// line 1
-	oldroot := t.root
+	oldroot := t.Root
 
 	// line 1b
 	endpoint, r := t.testAndSplit(s, stringPart[:len(stringPart)-1], newSymbol, rest, value)
@@ -135,13 +135,13 @@ func (t *GeneralizedSuffixTree) update(inputNode *Node, stringPart []Symbol, res
 		}
 
 		// update suffix link for newly created leaf
-		if t.activeLeaf != t.root {
+		if t.activeLeaf != t.Root {
 			t.activeLeaf.suffix = leaf
 		}
 		t.activeLeaf = leaf
 
 		// line 4
-		if oldroot != t.root {
+		if oldroot != t.Root {
 			oldroot.suffix = r
 		}
 
@@ -164,7 +164,7 @@ func (t *GeneralizedSuffixTree) update(inputNode *Node, stringPart []Symbol, res
 	}
 
 	// line 8
-	if oldroot != t.root {
+	if oldroot != t.Root {
 		oldroot.suffix = r
 	}
 
@@ -282,7 +282,7 @@ func safeCutLastChar(symbols []Symbol) []Symbol {
 
 func NewGeneralizedSuffixTree() *GeneralizedSuffixTree {
 	t := &GeneralizedSuffixTree{}
-	t.root = newNode()
-	t.activeLeaf = t.root
+	t.Root = newNode()
+	t.activeLeaf = t.Root
 	return t
 }
