@@ -33,7 +33,7 @@ func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *Node {
 	 * If such a path is found, the last node on it is returned.
 	 */
 	var currentNode = t.Root
-	var currentEdge *edge
+	var currentEdge *Edge
 
 	for i, symbol := range word {
 		currentEdge = currentNode.getEdge(symbol)

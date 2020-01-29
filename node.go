@@ -13,7 +13,7 @@ type Node struct {
 	/**
 	 * The set of edges starting from this Node
 	 */
-	Edges []*edge
+	Edges []*Edge
 	/**
 	 * The suffix link as described in Ukkonen's paper.
 	 * if str is the string denoted by the path from the root to this, this.suffix
@@ -92,7 +92,7 @@ func (n *Node) contains(index int) bool {
 	return i < len(n.Data) && n.Data[i] == index
 }
 
-func (n *Node) addEdge(r Symbol, e *edge) {
+func (n *Node) addEdge(r Symbol, e *Edge) {
 	if idx := n.search(r); idx == -1 {
 		n.Edges = append(n.Edges, e)
 		sort.Slice(n.Edges, func(i, j int) bool { return n.Edges[i].Label[0].IsLess(n.Edges[j].Label[0]) })
@@ -102,7 +102,7 @@ func (n *Node) addEdge(r Symbol, e *edge) {
 
 }
 
-func (n *Node) getEdge(r Symbol) *edge {
+func (n *Node) getEdge(r Symbol) *Edge {
 	idx := n.search(r)
 	if idx < 0 {
 		return nil
