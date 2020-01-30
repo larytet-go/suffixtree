@@ -2,6 +2,7 @@ package suffixtree
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 )
 
@@ -99,6 +100,24 @@ func TestSuffixTree1(t *testing.T) {
 	}
 
 	printnode("\t", tree.Root)
+}
+
+func randomWord(size int) []Symbol {
+	symbols := []Symbol{}
+	for i := 0; i < size; i++ {
+		c := 'a' + rand.Intn(0xFFFFFF)
+		r := myRune{rune(c)}
+		symbols = append(symbols, r)
+	}
+	return symbols
+}
+
+func TestSuffixTreeRandom(t *testing.T) {
+	tree := NewGeneralizedSuffixTree()
+	for k := 0; k < 1000; k++ {
+		word := randomWord(8)
+		tree.Put(word, k)
+	}
 }
 
 func printnode(flag string, n *Node) {
