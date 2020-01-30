@@ -128,6 +128,11 @@ func TestSuffixTreeRandom(t *testing.T) {
 			t.Errorf("Not found %v", word)
 		}
 	}
+	word := randomWord(8)
+	found := tree.Search(word, 0)
+	if len(found) != 0 {
+		t.Errorf("Found %v", word)
+	}
 }
 
 func printnode(flag string, n *Node) {
