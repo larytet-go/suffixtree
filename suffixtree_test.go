@@ -141,6 +141,8 @@ func TestSuffixTreeRandom(t *testing.T) {
 	if edgesCount != 3747 {
 		t.Errorf("Edges count %d", edgesCount)
 	}
+	// Try again to check that the code can process the same word
+	// more than once
 	rand.Seed(0)
 	for k := 0; k < count; k++ {
 		word := randomWord(0)
