@@ -114,13 +114,14 @@ func randomWord(size int) []Symbol {
 
 func TestSuffixTreeRandom(t *testing.T) {
 	rand.Seed(0)
+	count := 500
 	tree := NewGeneralizedSuffixTree()
-	for k := 0; k < 100; k++ {
+	for k := 0; k < count; k++ {
 		word := randomWord(8)
 		tree.Put(word, k)
 	}
 	rand.Seed(0)
-	for k := 0; k < 500; k++ {
+	for k := 0; k < count; k++ {
 		word := randomWord(8)
 		found := tree.Search(word, 0)
 		if len(found) == 0 {
