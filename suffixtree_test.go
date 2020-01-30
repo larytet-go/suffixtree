@@ -103,6 +103,10 @@ func TestSuffixTree1(t *testing.T) {
 }
 
 func randomWord(size int) []Symbol {
+	if size == 0 {
+		size = 4 + rand.Intn(8)
+	}
+
 	symbols := []Symbol{}
 	for i := 0; i < size; i++ {
 		c := 'a' + rand.Intn(0xFFFFFF)
@@ -117,12 +121,12 @@ func TestSuffixTreeRandom(t *testing.T) {
 	count := 500
 	tree := NewGeneralizedSuffixTree()
 	for k := 0; k < count; k++ {
-		word := randomWord(8)
+		word := randomWord(0)
 		tree.Put(word, k)
 	}
 	rand.Seed(0)
 	for k := 0; k < count; k++ {
-		word := randomWord(8)
+		word := randomWord(0)
 		found := tree.Search(word, 0)
 		if len(found) == 0 {
 			t.Errorf("Not found %v", word)
