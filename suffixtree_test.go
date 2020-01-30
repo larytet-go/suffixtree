@@ -132,7 +132,7 @@ func TestSuffixTreeRandom(t *testing.T) {
 			t.Errorf("Not found %v", word)
 		}
 	}
-	word := randomWord(8)
+	word := randomWord(0)
 	found := tree.Search(word, 0)
 	if len(found) != 0 {
 		t.Errorf("Found %v", word)
