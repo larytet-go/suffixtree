@@ -137,6 +137,10 @@ func TestSuffixTreeRandom(t *testing.T) {
 	if len(found) != 0 {
 		t.Errorf("Found %v", word)
 	}
+	edgesCount := tree.EdgesCount()
+	if edgesCount != 3747 {
+		t.Errorf("Edges count %d", edgesCount)
+	}
 }
 
 func printnode(flag string, n *Node) {
