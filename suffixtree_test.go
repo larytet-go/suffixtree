@@ -117,9 +117,9 @@ func randomWord(size int) []Symbol {
 }
 
 func TestSuffixTreeRandom(t *testing.T) {
-	rand.Seed(0)
 	count := 500
 	tree := NewGeneralizedSuffixTree()
+	rand.Seed(0)
 	for k := 0; k < count; k++ {
 		word := randomWord(0)
 		tree.Put(word, k)
@@ -140,6 +140,11 @@ func TestSuffixTreeRandom(t *testing.T) {
 	edgesCount := tree.EdgesCount()
 	if edgesCount != 3747 {
 		t.Errorf("Edges count %d", edgesCount)
+	}
+	rand.Seed(0)
+	for k := 0; k < count; k++ {
+		word := randomWord(0)
+		tree.Put(word, k)
 	}
 }
 
