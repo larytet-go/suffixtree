@@ -123,6 +123,10 @@ func TestSuffixTreeRandom(t *testing.T) {
 	for k := 0; k < count; k++ {
 		word := randomWord(0)
 		tree.Put(word, k)
+		found := tree.Search(word, 0)
+		if len(found) != 1 {
+			t.Errorf("Not found word=%v,found=%v", word, found)
+		}
 	}
 	rand.Seed(0)
 	for k := 0; k < count; k++ {
