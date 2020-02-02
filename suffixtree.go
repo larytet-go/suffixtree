@@ -34,8 +34,10 @@ func (t *GeneralizedSuffixTree) searchNode(word []Symbol) *Node {
 	 */
 	var currentNode = t.Root
 	var currentEdge *Edge
+	var i int
 
-	for i, symbol := range word {
+	for i < len(word) {
+		symbol := word[i]
 		currentEdge = currentNode.getEdge(symbol)
 		if currentEdge == nil {
 			// there is no edge starting with this symbol
