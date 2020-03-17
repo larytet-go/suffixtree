@@ -160,3 +160,30 @@ func printnode(flag string, n *Node) {
 		printnode(flag+"\t-", e.Node)
 	}
 }
+
+func poulateTree(count int) *GeneralizedSuffixTree {
+	tree := NewGeneralizedSuffixTree()
+	rand.Seed(0)
+	for k := 0; k < count; k++ {
+		word := randomWord(0)
+		tree.Put(word, k)
+	}
+	return tree
+}
+
+func BenchmarkSearch(b *testing.B) {
+	count := 100
+	tree := poulateTree(count)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		rand.Seed(0)
+		for k := 0; k < count; k++ {
+			word := randomWord(0)
+			found := tree.Search(word, 0)
+			if len(found) == 0 {
+				b.Errorf("Not found %v", word)
+			}
+		}
+	}
+}
+
