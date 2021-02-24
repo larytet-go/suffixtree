@@ -3,6 +3,13 @@
 This is a fork of https://github.com/ljfuyuan/suffixtree 
 I need a suffix tree which can work with abstract objects instead of characters and strings. Similar to the https://golang.org/pkg/index/suffixarray/ I allow []byte objects or any other objects implementing Suffixtree.Symbol interface
 
+```
+type Symbol interface {
+	IsEqual(other Symbol) bool
+	IsLess(other Symbol) bool
+}
+```
+
 A Go implementation of a Generalized Suffix Tree using Ukkonen's algorithm
 
 The package just translate from Alessandro Bahgat Shehata's java version to golang and do some optimization  
